@@ -92,19 +92,38 @@ trans_ent %>%
 
 
 ### Problem 2
-```{r}
+```{r, warning = FALSE,message=FALSE}
 # Tidy the Mr. Trash Wheel dataset
-mr_trash_df= readxl::read_excel("./hw2_data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx", 
+# Tidy the Mr. Trash Wheel dataset
+mr_df = readxl::read_excel("./hw2_data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx", 
                                  sheet = "Mr. Trash Wheel",
+                                 range = cellranger::cell_cols("A:N")) |>  
+  janitor::clean_names() |> 
+  drop_na(dumpster) |>  
+  filter(dumpster != "Grand Total") |> 
+  mutate(sports_balls = as.integer(round(sports_balls, 0)),
+         month = recode(month,"Decemeber" = "December"),
+         dumpster = as.integer(dumpster)) |>  
+  rename(weight = weight_tons, volume = volume_cubic_yards)
+  
+```
+
+
+
+```{r, warning = FALSE,message=FALSE}
+# Tidy the Professor Trash Wheel dataset
+
+prof_df = readxl::read_excel("./hw2_data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx", 
+                                 sheet = "Professor Trash Wheel",
                                  range = cellranger::cell_cols("A:N")) %>% 
   janitor::clean_names() %>%
   drop_na(dumpster) %>% 
   filter(dumpster != "Grand Total") %>%
-  mutate(sports_balls = as.integer(round(sports_balls, 0)),
-         month = recode(month,"Decemeber" = "December"),
-         dumpster = as.integer(dumpster)) %>% 
+  mutate(sports_balls = as.integer(round(sports_balls, 0))) %>% 
   rename(weight = weight_tons, volume = volume_cubic_yards)
 ```
+
+
 
 
 ### Problem 3
