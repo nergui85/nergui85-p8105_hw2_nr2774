@@ -94,8 +94,8 @@ trans_ent %>%
 ### Problem 2
 ```{r, warning = FALSE,message=FALSE}
 # Tidy the Mr. Trash Wheel dataset
-# Tidy the Mr. Trash Wheel dataset
-mr_df = readxl::read_excel("./hw2_data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx", 
+
+mr_df = read_excel("./hw2_data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx", 
                                  sheet = "Mr. Trash Wheel",
                                  range = cellranger::cell_cols("A:N")) |>  
   janitor::clean_names() |> 
@@ -113,20 +113,32 @@ mr_df = readxl::read_excel("./hw2_data/Trash-Wheel-Collection-Totals-7-2020-2.xl
 ```{r, warning = FALSE,message=FALSE}
 # Tidy the Professor Trash Wheel dataset
 
-prof_df = readxl::read_excel("./hw2_data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx", 
+prof_df = read_excel("./hw2_data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx", 
                                  sheet = "Professor Trash Wheel",
-                                 range = cellranger::cell_cols("A:N")) %>% 
-  janitor::clean_names() %>%
-  drop_na(dumpster) %>% 
-  filter(dumpster != "Grand Total") %>%
-  mutate(sports_balls = as.integer(round(sports_balls, 0))) %>% 
+                                 range = cellranger::cell_cols("A:N")) |>  
+  janitor::clean_names() |> 
+  drop_na(dumpster) |>  
+  filter(dumpster != "Grand Total") |> 
+  mutate(sports_balls = as.integer(round(sports_balls, 0))) |>  
   rename(weight = weight_tons, volume = volume_cubic_yards)
 ```
 
 
-
-
 ### Problem 3
 
+```{r}
+# Merge the two Trash Wheel datasets
+mr_merge_df = mr_df |>  mutate(name= "Mr. Trash Wheel")
+prof_merge_df = prof_df |>  mutate(name = "Professor Trash Wheel")
+merge_df = bind_rows(mr_merge_df, prof_merge_df)
+
+```
+
+this is `r names(merge_df)`
+```{r}
 
 
+```
+
+
+The total number is `r prof_df %>% pull(weight) %>% sum()`
